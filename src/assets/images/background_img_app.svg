@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1600px" height="1250px" viewBox="0 0 1600 1250" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>F29D5AC4-CE8C-4E99-ABD3-01B431FD5231</title>
+    <defs>
+        <polygon id="path-1" points="0 0 1600 0 1600 1249.02683 0 1249.02683"></polygon>
+    </defs>
+    <g id="🏗-Radar-covid-QR" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" opacity="0.300292969">
+        <g id="4.-Radar-covid-sanitario/a-login--" transform="translate(80.000000, -120.000000)">
+            <g id="Group-3" transform="translate(-80.000000, 120.000000)">
+                <mask id="mask-2" fill="white">
+                    <use xlink:href="#path-1"></use>
+                </mask>
+                <g id="Clip-2"></g>
+                <path d="M1595.44798,678.327996 C1548.78967,1054.00741 1206.59941,1320.70973 831.15789,1274.02253 C455.705389,1227.32984 -43.6182064,855.981155 3.04559959,480.307238 C49.7039131,104.622329 582.800548,260.473475 981.683816,68.3057911 C1322.56138,-95.9210215 1642.10629,302.654078 1595.44798,678.327996" id="Fill-1" fill="#EEEEEE" mask="url(#mask-2)"></path>
+            </g>
+        </g>
+    </g>
+</svg>
