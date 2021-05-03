@@ -15,7 +15,8 @@ const state = {
   loading: false,
   token: undefined,
   userLogged: undefined,
-  isMobileOrTabletOrientationPortrait: false
+  isMobileOrTabletOrientationPortrait: false,
+  textNotification: undefined
 };
 
 // getters
@@ -31,6 +32,9 @@ const getters = {
   },
   getIsMobileOrTabletOrientationPortrait: (state) => {
     return state.isMobileOrTabletOrientationPortrait;
+  },
+  getTextNotification: (state) => {
+    return state.textNotification;
   }
 };
 
@@ -74,6 +78,9 @@ const mutations = {
   },
   setIsMobileOrTabletOrientationPortrait (state, payload) {
     state.isMobileOrTabletOrientationPortrait = payload;
+  },
+  setTextNotification (state, payload) {
+    state.textNotification = payload;
   }
 };
 

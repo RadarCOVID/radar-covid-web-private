@@ -63,6 +63,7 @@ form {
   font-weight: bold;
   letter-spacing: 0;
   line-height: 36px;
+  margin-bottom: 16px;
 }
 
 form .div-input {
@@ -82,6 +83,7 @@ form .div-input label {
 
 form .div-input input {
   height: 40px;
+  min-height: 40px;
   border: 1px solid #65498D !important;
   border-radius: 8px;
   background-color: #FFFFFF;
@@ -144,27 +146,12 @@ form .incorrect {
 .button-accept {
   box-sizing: border-box;
   height: 40px !important;
+  min-height: 40px !important;
   border: 1px solid #65498D;
   border-radius: 8px;
   background-color: #65498D !important;
   box-shadow: 0 2px 4px 0 rgba(124, 121, 121, 0.2);
   color: #FFFFFF;
-  font-size: 16px;
-  font-weight: bold;
-  letter-spacing: 0;
-  line-height: 24px;
-  outline: none;
-  cursor: pointer;
-}
-
-form .button-cancel {
-  background-color: transparent !important;
-  box-sizing: border-box;
-  height: 40px;
-  border: 1px solid #65498D;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px 0 rgba(124, 121, 121, 0.2);
-  color: #65498D;
   font-size: 16px;
   font-weight: bold;
   letter-spacing: 0;

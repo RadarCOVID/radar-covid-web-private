@@ -19,12 +19,12 @@
         <div class="date">
           <div class="div-input">
             <label for="startDate">{{ $t('WEB_CREATE_VALIDATION_CODE_START_DATE') }}</label>
-            <date-picker @blur="setOnBlurDatePicker('startDate')" id="startDate" v-model="form.startDate" :lang="lang"
+            <date-picker @blur="setOnBlurDatePicker('startDate')" @change="setOnBlurDatePicker('startDate')" id="startDate" v-model="form.startDate" :lang="lang"
                          valueType="format" type="date" format="DD/MM/YYYY" placeholder="dd/mm/yyyy"
                          :disabled-date="setLimitationsOfFourteenDays">
-              <i slot="icon-calendar">
-                <img src="../../assets/images/date_icon.svg" alt="date_icon">
-              </i>
+              <span slot="icon-calendar">
+                <img style="cursor: pointer" src="../../assets/images/date_icon.svg" alt="date_icon">
+              </span>
             </date-picker>
             <div>
               <span class="error" v-if="validateForm.startDate === 'incorrect'">{{
@@ -34,12 +34,12 @@
           </div>
           <div class="div-input">
             <label for="startTime">{{ $t('WEB_CREATE_VALIDATION_CODE_START_TIME') }}</label>
-            <date-picker @blur="setOnBlurDatePicker('startTime')" id="startTime" v-model="form.startTime"
+            <date-picker @blur="setOnBlurDatePicker('startTime')" @change="setOnBlurDatePicker('startTime')" id="startTime" v-model="form.startTime"
                          valueType="format"
                          type="time" format="HH:mm" placeholder="hh:mm">
-              <i slot="icon-calendar">
-                <img src="../../assets/images/clock_icon.svg" alt="clock_icon">
-              </i>
+              <span slot="icon-calendar">
+                <img style="cursor: pointer" src="../../assets/images/clock_icon.svg" alt="clock_icon">
+              </span>
             </date-picker>
             <div>
               <span class="error" v-if="validateForm.startTime === 'incorrect'">{{
@@ -51,12 +51,12 @@
         <div class="date">
           <div class="div-input">
             <label for="endDate">{{ $t('WEB_CREATE_VALIDATION_CODE_END_DATE') }}</label>
-            <date-picker @blur="setOnBlurDatePicker('endDate')" id="endDate" v-model="form.endDate" :lang="lang"
+            <date-picker @blur="setOnBlurDatePicker('endDate')" @change="setOnBlurDatePicker('endDate')" id="endDate" v-model="form.endDate" :lang="lang"
                          valueType="format" type="date" format="DD/MM/YYYY" placeholder="dd/mm/yyyy"
                          :disabled-date="setLimitationsOfFourteenDays">
-              <i slot="icon-calendar">
-                <img src="../../assets/images/date_icon.svg" alt="date_icon">
-              </i>
+              <span slot="icon-calendar">
+                <img style="cursor: pointer" src="../../assets/images/date_icon.svg" alt="date_icon">
+              </span>
             </date-picker>
             <div>
               <span class="error"
@@ -67,11 +67,11 @@
           </div>
           <div class="div-input">
             <label for="endTime">{{ $t('WEB_CREATE_VALIDATION_CODE_END_TIME') }}</label>
-            <date-picker @blur="setOnBlurDatePicker('endTime')" id="endTime" v-model="form.endTime" valueType="format"
+            <date-picker @blur="setOnBlurDatePicker('endTime')" @change="setOnBlurDatePicker('endTime')" id="endTime" v-model="form.endTime" valueType="format"
                          type="time" format="HH:mm" placeholder="hh:mm">
-              <i slot="icon-calendar">
-                <img src="../../assets/images/clock_icon.svg" alt="clock_icon">
-              </i>
+              <span slot="icon-calendar">
+                <img style="cursor: pointer" src="../../assets/images/clock_icon.svg" alt="clock_icon">
+              </span>
             </date-picker>
             <div>
               <span class="error"
@@ -212,7 +212,7 @@ export default {
         if (resp && resp.data) {
           code = resp.data.caseCode;
         }
-        this.$emit('acceptOrCancelCreateValidationCode', code);
+        this.$emit('acceptOrCancelCreateValidationCode', {verificationCode: code, nameEstablishment: this.form.name});
       }).catch(console.error).finally(() => {
         this.$store.commit('setLoading', false);
       });
@@ -231,6 +231,9 @@ export default {
       return new Date(parseInt(dateSplit[2]), parseInt(dateSplit[1]) - 1, parseInt(dateSplit[0]), parseInt(timeSplit[0]), parseInt(timeSplit[1])).getTime();
     },
     getStartDateLessThanEndDate () {
+      const dateNow = new Date().getTime();
+      if (this.getDateTime(this.form.startDate, this.form.startTime) > dateNow) return true;
+      if (this.getDateTime(this.form.endDate, this.form.endTime) > dateNow) return true;
       return this.getDateTime(this.form.startDate, this.form.startTime) >= this.getDateTime(this.form.endDate, this.form.endTime);
     }
   }
@@ -249,12 +252,11 @@ export default {
   display: flex;
   justify-content: space-between;
   flex-direction: column;
-  height: 50%;
   overflow: auto;
 }
 
 .create-validation-code form .date-and-time-content > .div-input input {
-  min-width: 315px;
+  min-width: 277px;
 }
 
 .create-validation-code form .date, .buttons {
@@ -263,15 +265,30 @@ export default {
   grid-gap: 21px;
 }
 
+.create-validation-code form .buttons {
+  margin-top: 16px;
+}
+
+.create-validation-code form .buttons .button-cancel {
+  background-color: transparent !important;
+  box-sizing: border-box;
+  height: 40px;
+  border: 1px solid #65498D;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px 0 rgba(124, 121, 121, 0.2);
+  color: #65498D;
+  font-size: 16px;
+  font-weight: bold;
+  letter-spacing: 0;
+  line-height: 24px;
+  outline: none;
+  cursor: pointer;
+}
+
 .create-validation-code form .date .div-input {
   display: grid;
   grid-template-rows: auto auto 16px;
   justify-content: normal;
-}
-
-.create-validation-code form .date .div-input input {
-  padding: 0 5px 0 12px;
-  min-width: 155px;
 }
 
 .create-validation-code form .date .div-input .error {
@@ -280,17 +297,17 @@ export default {
 
 .create-validation-code form .date .div-input .mx-datepicker {
   width: auto;
+  min-width: 155px;
 }
 
 @media (min-width: 1024px) {
   .create-validation-code {
     height: 85.5%;
     width: 95%;
-    margin-top: 50px;
+    margin-top: 30px;
   }
 
   .create-validation-code form .date-and-time-content {
-    height: auto;
     overflow: hidden;
   }
 }
@@ -299,7 +316,6 @@ export default {
   .create-validation-code {
     height: 67.5%;
     width: 76%;
-    margin-top: 36px;
   }
 }
 
@@ -311,7 +327,6 @@ export default {
   }
 
   .create-validation-code form .date-and-time-content {
-    height: 72%;
     overflow: auto;
   }
 }
@@ -343,7 +358,7 @@ export default {
   }
 
   .create-validation-code form .date-and-time-content, .buttons {
-    width: 70%;
+    width: 75%;
     align-self: center;
   }
 
@@ -352,8 +367,8 @@ export default {
       height: 60%;
     }
 
-    .create-validation-code form .date-and-time-content {
-      height: 70%;
+    .create-validation-code form .date-and-time-content, .buttons {
+      width: 70%;
       overflow: hidden;
     }
   }

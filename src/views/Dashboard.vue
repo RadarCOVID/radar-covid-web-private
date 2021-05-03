@@ -10,20 +10,21 @@
 
 <template>
   <div class="dashboard">
-    <div class="content" :class="{'content-portrait': mapGetIsMobileOrTabletOrientationPortrait}">
+    <div class="content">
       <information-box :step="step"></information-box>
       <login v-if="step === 1" @loginAccept="step = 2"></login>
       <create-validation-code v-if="step === 2"
                               @acceptOrCancelCreateValidationCode="setAcceptOrCancelCreateValidationCode"
                               @notLogin="setNoLogin"></create-validation-code>
-      <verification-code-created v-if="step === 3" :verificationCode="verificationCode"
+      <verification-code-created v-if="step === 3" :verificationCode="verificationCode" :nameEstablishment="nameEstablishment"
                                  @acceptCreateNewCode="setAcceptCreateNewCode"
                                  @notLogin="setNoLogin"></verification-code-created>
     </div>
     <div class="background"></div>
     <div v-if="mapGetLoading" id="loading"></div>
-    <div id="notification">
-      <span>{{$t('WEB_NOTIFICATION_COPIED_TO_CLIPBOARD')}}</span>
+    <div class="notification" v-if="mapGetTextNotification">
+      <span>{{ mapGetTextNotification }}</span>
+      <img id="notification-close" src="../assets/images/close.svg" alt="close" @click="closedNotification">
     </div>
   </div>
 </template>
@@ -42,6 +43,7 @@ export default {
     return {
       step: 1,
       verificationCode: undefined,
+      nameEstablishment: undefined,
       isOrientationPortrait: false
     };
   },
@@ -53,7 +55,7 @@ export default {
     ...mapGetters({
       mapGetLoading: 'getLoading',
       mapGetUserLogged: 'getUserLogged',
-      mapGetIsMobileOrTabletOrientationPortrait: 'getIsMobileOrTabletOrientationPortrait'
+      mapGetTextNotification: 'getTextNotification'
     })
   },
   watch: {
@@ -61,49 +63,61 @@ export default {
       if (!value) {
         this.step = 1;
       }
+    },
+    mapGetTextNotification: function (value) {
+      if (value) {
+        setTimeout(() => {
+          this.closedNotification();
+        }, 3000);
+      }
     }
   },
   methods: {
     setAcceptOrCancelCreateValidationCode (value) {
       if (value) {
-        this.verificationCode = value;
+        this.verificationCode = value.verificationCode;
+        this.nameEstablishment = value.nameEstablishment;
       }
       this.step = 3;
     },
     setAcceptCreateNewCode () {
       this.verificationCode = undefined;
+      this.nameEstablishment = undefined;
       this.step = 2;
     },
     setNoLogin () {
       this.verificationCode = undefined;
+      this.nameEstablishment = undefined;
       this.step = 1;
     },
     windowResize () {
-      const body = document.querySelector('body');
-      const windowHeight = window.innerHeight + 'px';
-      const windowWidth = window.innerWidth + 'px';
-      if (body) {
-        body.style.minHeight = (this.getIsMobileOrTablet() && body.style.minWidth === windowWidth) ? body.style.minHeight : windowHeight;
-        body.style.minWidth = windowWidth;
-      }
-      this.$store.commit('setIsMobileOrTabletOrientationPortrait', this.getIsMobileOrTabletOrientationPortrait());
+      setTimeout(() => {
+        const body = document.querySelector('body');
+        const windowHeight = window.innerHeight + 'px';
+        const windowWidth = window.innerWidth + 'px';
+        this.isOrientationPortrait = ('orientation' in screen) ? !window.screen.orientation.angle : Math.abs(window.orientation) !== 90;
+        if (body) {
+          body.style.minHeight = (this.getIsMobileOrTablet() && body.style.minWidth === windowWidth) ? body.style.minHeight : windowHeight;
+          body.style.minWidth = windowWidth;
+        }
+        this.$store.commit('setIsMobileOrTabletOrientationPortrait', this.getIsMobileOrTablet() && this.isOrientationPortrait);
+      }, 100);
     },
     getIsMobileOrTablet () {
       let userAgent = (
         (navigator.userAgent.match(/Android/i)) ||
-        (navigator.userAgent.match(/webOS/i)) ||
         (navigator.userAgent.match(/iPhone/i)) ||
         (navigator.userAgent.match(/iPod/i)) ||
-        (navigator.userAgent.match(/iPad/i)) ||
-        (navigator.userAgent.match(/BlackBerry/i))
+        (navigator.userAgent.match(/iPad/i))
       );
       return (userAgent !== undefined && userAgent !== null);
     },
-    getIsMobileOrTabletOrientationPortrait () {
-      return this.getIsMobileOrTablet() && window.matchMedia('(orientation: portrait)').matches;
+    closedNotification () {
+      this.$store.commit('setTextNotification', undefined);
     }
   },
   destroyed () {
+    this.showNotification = false;
     window.removeEventListener('resize', this.windowResize);
   }
 };
@@ -128,7 +142,6 @@ export default {
   background-repeat: no-repeat;
   background-position: center;
   background-position-y: 30.3px;
-  opacity: 0.3;
   overflow: hidden;
   z-index: 1;
 }
@@ -145,13 +158,6 @@ export default {
   z-index: 2;
 }
 
-.dashboard .content-portrait {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  grid-gap: 0;
-}
-
 #loading {
   display: block;
   position: absolute;
@@ -163,14 +169,13 @@ export default {
   background-color: rgba(192, 192, 192, 0.5);
 }
 
-#notification {
+.notification {
   width: 100%;
   position: fixed;
   top: 0;
   left: 0;
-  display: none;
+  display: grid;
   align-items: center;
-  justify-content: center;
   grid-template-columns: auto 40px;
   height: 45px;
   background-color: #000000;
@@ -178,6 +183,10 @@ export default {
   font-weight: 600;
   text-align: center;
   z-index: 3;
+}
+
+.notification img {
+  cursor: pointer;
 }
 
 @media screen and (min-width: 1024px) {
@@ -189,6 +198,15 @@ export default {
 @media screen and (min-width: 1280px) {
   .dashboard .content {
     grid-gap: 115px;
+  }
+}
+
+@media (orientation: portrait) {
+  .dashboard .content {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    grid-gap: 0;
   }
 }
 </style>

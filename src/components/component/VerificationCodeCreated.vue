@@ -11,7 +11,7 @@
 <template>
   <div class="verification-code-created">
     <div class="content" :style="{'justify-content': !verificationCode ? 'center' : 'space-between'}">
-      <template v-if="verificationCode">
+      <template v-if="verificationCode && nameEstablishment">
         <span class="title">{{ $t('WEB_VERIFICATION_CODE_CREATED_TITLE') }}</span>
         <div class="code-box">
           <span class="code-box-title">{{ $t('WEB_VERIFICATION_CODE_CREATED_CODE_BOX_TITLE') }}</span>
@@ -19,7 +19,10 @@
             <span id="text-code">{{ verificationCode }}</span>
             <button class="button-copy-text" @click="setCopyToClipboard"><img src="../../assets/images/copy.svg" alt="icon copy"></button>
           </div>
-          <span class="code-box-msg">{{ $t('WEB_VERIFICATION_CODE_CREATED_CODE_BOX_MESSAGE') }}</span>
+          <div class="code-box-msg">
+            <span>{{ $t('WEB_VERIFICATION_CODE_CREATED_CODE_BOX_MESSAGE') }}</span>
+            <span>"{{ nameEstablishment }}"</span>
+          </div>
         </div>
       </template>
       <button class="button-accept" @click="setCreateNewCode">{{
@@ -33,7 +36,7 @@
 <script>
 export default {
   name: 'VerificationCodeCreated',
-  props: ['verificationCode'],
+  props: ['verificationCode', 'nameEstablishment'],
   data () {
     return {};
   },
@@ -47,6 +50,7 @@ export default {
       this.$emit('acceptCreateNewCode');
     },
     setCopyToClipboard () {
+      this.$store.commit('setTextNotification', this.$t('WEB_NOTIFICATION_COPIED_TO_CLIPBOARD'));
       const codeCopy = document.getElementById('text-code');
       const selection = document.createRange();
       if (codeCopy && selection) {
@@ -55,16 +59,6 @@ export default {
         window.getSelection().addRange(selection);
         document.execCommand('copy');
         window.getSelection().removeRange(selection);
-        this.setNotification();
-      }
-    },
-    setNotification () {
-      const notification = document.getElementById('notification');
-      if (notification) {
-        notification.style.display = 'flex';
-        setTimeout(() => {
-          notification.style.display = 'none';
-        }, 500);
       }
     }
   }
@@ -97,6 +91,7 @@ export default {
   width: 100%;
   border-radius: 8px;
   background-color: #EAE8F0;
+  overflow: hidden;
 }
 
 .verification-code-created .content .code-box .code-box-title {
@@ -134,10 +129,15 @@ export default {
   justify-content: center;
   background-color: transparent !important;
   border: none !important;
+  outline: none !important;
 }
 
 .verification-code-created .content .code-box .code-box-msg {
-  max-width: 240px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  max-width: 95%;
   color: #000000;
   font-size: 16px;
   letter-spacing: 0;
@@ -145,11 +145,26 @@ export default {
   text-align: center;
 }
 
+.verification-code-created .content .code-box .code-box-msg > span:first-child {
+  max-width: 240px;
+}
+
+.verification-code-created .content .code-box .code-box-msg > span:last-child {
+  max-height: 40px;
+  min-height: 25px;
+  margin-top: 5px;
+  overflow: auto;
+}
+
 @media (min-width: 1024px) {
   .verification-code-created {
     width: 89%;
     height: 75.5%;
     margin-top: 50px;
+  }
+
+  .verification-code-created .content .code-box .code-box-msg > span:last-child {
+    max-height: 70px;
   }
 }
 

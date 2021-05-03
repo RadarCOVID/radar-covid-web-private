@@ -14,7 +14,7 @@
       <span>{{ $t(`WEB_INFORMATION_BOX_${tagInformationBox}_TITLE`) }}</span>
       <img src="../../assets/images/dropdown.svg" alt="dropdown" v-if="isOrientationPortrait" @click="isOpenInformationBox = !isOpenInformationBox">
     </div>
-    <div class="list" v-if="isOpenInformationBox && arrayInformationBox.length > 0">
+    <div class="list" :class="{'list-login': step === 1}" v-if="isOpenInformationBox && arrayInformationBox.length > 0">
       <div class="item" v-for="(text, index) of arrayInformationBox" :key="index">
         <div class="icon">
           <img src="../../assets/images/fill_ball.svg" alt="icon">
@@ -102,12 +102,16 @@ export default {
 }
 
 .information-box .list {
-  height: calc(100% - 64px - 47px);
+  height: calc(100% - 48px - 94px);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   margin: 16px 32px;
   overflow: auto;
+}
+
+.information-box .list-login {
+  height: calc(100% - 48px - 47px);
 }
 
 .information-box .list .item {
@@ -165,10 +169,6 @@ export default {
     height: 98%;
     width: 92%;
   }
-
-  .information-box .list {
-    overflow: hidden !important;
-  }
 }
 
 @media (min-width: 1440px) {
@@ -195,11 +195,15 @@ export default {
   .information-box {
     height: 97%;
     width: 97%;
-    margin: 5px 0 40px 0;
+    margin: 5px 0 32px 0;
+  }
+
+  .information-box .list {
+    height: calc(100% - 48px - 47px);
   }
 
   .information-box-close {
-    height: 94px !important;
+    height: 82px !important;
   }
 
   .information-box-close img{
@@ -209,9 +213,11 @@ export default {
   @media (min-width: 768px) {
     .information-box {
       height: 55%;
+      margin: 5px 0 40px 0;
     }
 
     .information-box .list {
+      height: calc(100% - 78px - 47px);
       margin: 24px 32px;
       overflow: hidden;
     }
@@ -220,6 +226,10 @@ export default {
   @media (min-width: 1024px) {
     .information-box {
       height: 40%;
+    }
+
+    .information-box-close {
+      height: 90px !important;
     }
 
     .information-box .list {

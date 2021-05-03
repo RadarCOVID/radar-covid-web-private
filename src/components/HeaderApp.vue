@@ -106,6 +106,7 @@ export default {
   align-items: center;
   height: 40px;
   width: 40px;
+  min-width: 40px;
   background-color: #65498D;
   border: 2px solid #FFFFFF;
   border-radius: 50%;
@@ -182,6 +183,19 @@ export default {
 
   .header-app .header-app-content .user-logged {
     margin-right: 0;
+  }
+}
+@media (orientation: portrait) {
+  .header-app .header-app-content > img {
+    width: 45%;
+    margin-right: 16px;
+  }
+
+  @media (min-width: 768px) {
+    .header-app .header-app-content > img {
+      width: auto;
+      margin-right: 16px;
+    }
   }
 }
 </style>

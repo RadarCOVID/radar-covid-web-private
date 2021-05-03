@@ -64,6 +64,14 @@ export default {
         return true;
       }
     },
+    resetForm () {
+      this.valueEmail = undefined;
+      this.valuePassword = undefined;
+      this.validateForm = {
+        classEmail: '',
+        classPassword: ''
+      };
+    },
     setValidate (key) {
       switch (key) {
       case 'email':
@@ -92,8 +100,8 @@ export default {
           this.$emit('loginAccept');
         }
       }).catch(() => {
-        this.validateForm.classEmail = 'incorrect';
-        this.validateForm.classPassword = 'incorrect';
+        this.resetForm();
+        this.$store.commit('setTextNotification', this.$t('WEB_NOTIFICATION_LOGIN_ERROR'));
       }).finally(() => {
         this.$store.commit('setLoading', false);
       });
@@ -127,7 +135,6 @@ export default {
 }
 
 .login form .user-and-password-content {
-  height: 45%;
   overflow: auto;
 }
 
@@ -149,13 +156,19 @@ export default {
 @media (min-width: 1024px) {
   .login {
     height: 74%;
-    width: 89%;
+    width: 90%;
     margin: 50px 0;
   }
 
   .login form .user-and-password-content {
-    height: auto;
     overflow: hidden;
+  }
+}
+
+@media (min-width: 1024px) and (max-height: 670px) {
+  .login {
+    height: 80%;
+    margin: 30px 0;
   }
 }
 
@@ -172,10 +185,6 @@ export default {
     height: 90%;
     width: 73%;
     margin: 0;
-  }
-
-  .login form .user-and-password-content {
-    height: 60%;
   }
 }
 
@@ -206,7 +215,6 @@ export default {
   }
 
   .login form .user-and-password-content {
-    height: auto;
     width: 70%;
     align-self: center;
   }
@@ -222,7 +230,6 @@ export default {
     }
 
     .login form .user-and-password-content {
-      height: auto;
       overflow: hidden;
     }
   }
